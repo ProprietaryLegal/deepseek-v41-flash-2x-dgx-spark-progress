@@ -76,9 +76,9 @@ The pool is shared by every request, and the 4-request limit applies separately.
 
 ### 500K prompts (MEASURED 2026-10-23, 524,288 profile)
 
-- Needle retrieval at 450K and 500K: 4 of 4 runs found all 6 needles. Prefix-cache reuse was exact at 250K and 500K.
-- One 500K request: first token after 322 s (about 1,550 prompt tokens per second), then 48.2 tok/s.
-- Two 500K requests at once: first tokens after 648 and 655 s, then 29.9 and 34.5 tok/s. Free memory on one Spark fell to about 3.1 GiB, so two concurrent ~500K prompts are the riskiest load.
+- Needle retrieval with prompts of about 450K and 498K tokens: 4 of 4 runs answered with all 6 needles. Prefix-cache reuse was exact at 250K and 500K.
+- Literal 500,000-token prompts (three runs): one at a time, first token after 322 s (about 1,550 prompt tokens per second), then 48.2 tok/s; two at once, first tokens after 648 and 655 s, then 29.9 and 34.5 tok/s. These benchmark runs stop after 1,500 reasoning tokens (finish = length) with no visible answer. They prove that 500K prompts fit and decode. A completed full answer to a 500,000-token prompt has not been shown yet.
+- Free memory on one Spark fell to about 3.1 GiB during the two-at-once run, so two concurrent ~500K prompts are the riskiest load.
 - The drafter drafted every round at 500K.
 - **Held:** on this profile every cold prompt reads about 35% slower than at 327,680. 150K took 93.4 s against 68.9 s, and 32K took 19.8 s against 14.6 s: a flat +0.163 ms per prompt token. Decode is unchanged. The cause is under investigation, so production stays at 327,680.
 
@@ -111,7 +111,9 @@ The pool is shared by every request, and the 4-request limit applies separately.
 - **Drafter training (self-distillation).** The model's own outputs on 538 public prompts (court opinions, public filings and general text; no client material) train a low-rank adapter on the drafter, so it predicts the target's legal writing better. Generation of about 1M tokens is running. Next, a replay pass captures the target's hidden states and top-20 probabilities.
   - Then a matched pilot: reference trainer, fast trainer, and fast trainer with a different data order, on equal blocks, updates and tokens. It is judged on accepted drafts per round on held-out development families under a rule fixed before any data: a useful gain of at least 0.05 accepted per round with a 90% lower bound above zero, and the fast trainer within −0.03 of the reference.
   - Twelve new public test prompts are frozen for the final candidate only.
-  - Today's drafter accepts about 1.82 drafts per round (MEASURED, 521 rounds). ESTIMATED payoff: +3% to +24% decode, central about +10%. An exact target-greedy oracle analysis on 529 rounds from 4 requests scored 3.151 against a 1.831 lower bound for the current drafter. That is a ceiling for an idealized drafter on a small sample, not a forecast.
+  - **No speed gain from training is measured or forecast yet.** Earlier improvement estimates rested on four requests and are withdrawn as expectations. The pilot decides.
+  - For scale, by arithmetic only: today's drafter accepts about 1.82 drafts per round (MEASURED on a 521-round sample). At an unchanged round time, 0.30 more accepted per round would raise R = (1 + E[A]) / C by about 10.6%.
+  - A separate exact analysis on 529 rounds from 4 requests scored an idealized target-greedy oracle at 3.151 accepted per round, against 1.831 for the captured drafter on the same rounds. That is a ceiling for an idealized drafter on a small sample, not a forecast. Its figures come from a different sample than the 1.82 figure and must not be subtracted from it.
   - Training cannot change outputs, only speed.
 - **Native drafter live A/B** on the NVLink pair, judged by outcomes.
 - **Target profiling on GB10.** Measuring where the 38–40 ms round goes, plus a cheap screen of draft depth.
