@@ -1,0 +1,14 @@
+PLI Labs — deepseek-v41-flash-2x-dgx-spark-progress
+Copyright 2026 ProprietaryLegal (PLI Labs)
+
+The documentation in this repository is licensed under the Apache License, Version 2.0 (see LICENSE).
+This repository contains no model weights, no code and no third-party material.
+
+Models and software this report describes (obtained separately, under their own terms):
+  DeepSeek-V4.1-Flash-1017 (deepseek-ai/DeepSeek-V4.1-Flash-1017), DeepSeek.
+  DGX Spark image and patch stack, HeNryous (https://github.com/HeNryous/deepseek-v41-1017-dgx-spark).
+  Two-node launcher, sudoingX (https://github.com/sudoingX/dgx-spark-deepseek-v41).
+  exllamav3, turboderp (https://github.com/turboderp-org/exllamav3).
+  vLLM (https://github.com/vllm-project/vllm), Apache License 2.0.
+
+PLI Labs is not affiliated with DeepSeek, NVIDIA or the upstream authors.
