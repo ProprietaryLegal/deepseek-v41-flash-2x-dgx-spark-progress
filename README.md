@@ -1,5 +1,12 @@
 # DeepSeek-V4.1-Flash on 2× DGX Spark (GB10) with an x86 RTX 3090 offload host: progress report, October 2026
 
+<!-- pli:update:2026-10-27:start -->
+
+**Update 2026-10-27:** the full DSV41 source is now public — [dsv41-offload](https://github.com/ProprietaryLegal/dsv41-offload) (every component; `production`, `main` and per-experiment `lane/*` branches), with focused repos for the [measurement harness](https://github.com/ProprietaryLegal/dsv41-window-harness) and [sampled drafting](https://github.com/ProprietaryLegal/dsv41-sampled-drafting). Status and lessons: [2026-10-27 post](https://github.com/ProprietaryLegal/pli-labs/blob/main/research/dgx-spark-offload/2026-10-27-status-and-code.md).
+
+<!-- pli:update:2026-10-27:end -->
+
+
 A local deployment of DeepSeek-V4.1-Flash-1017 (EXL3, about 2.75 bits per weight) that runs the target model across two NVIDIA DGX Spark / GB10 nodes and moves two of its parts to an ordinary x86 server: the speculative drafter now runs on a pair of NVLinked RTX 3090s, and the Engram n-gram tables are served from the server's RAM over RDMA. This page records what is in production, what was measured, what did not work and why, and what comes next. Every number is labelled.
 
 **Stack overview:** [GitHub](https://github.com/ProprietaryLegal/DeepSeek-V4.1-Flash-2xDGX-Spark-x86-offload) · [Hugging Face](https://huggingface.co/ProprietaryLegal/DeepSeek-V4.1-Flash-2xDGX-Spark-x86-offload) · **Collection:** [All entries](https://huggingface.co/collections/ProprietaryLegal/deepseek-v41-flash-on-2x-dgx-spark-x86-offload-6adab604a517b426ded3916e)
